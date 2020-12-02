@@ -49,9 +49,9 @@ fn parse_one_input(input: &str) -> Input {
     Input {
         password: caps.get(4).unwrap().as_str().to_string(),
         policy: Policy {
-            position1: caps.get(1).map(|s| s.as_str().parse().unwrap()).unwrap(),
-            position2: caps.get(2).map(|s| s.as_str().parse().unwrap()).unwrap(),
-            letter: caps.get(3).map(|s| s.as_str().chars().nth(0).unwrap()).unwrap()
+            position1: caps.get(1).and_then(|s| s.as_str().parse().ok()).unwrap(),
+            position2: caps.get(2).and_then(|s| s.as_str().parse().ok()).unwrap(),
+            letter: caps.get(3).and_then(|s| s.as_str().chars().nth(0)).unwrap()
         }
     }
 }
