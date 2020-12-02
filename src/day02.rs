@@ -35,25 +35,25 @@ fn char_at_matches(s: &str, index: usize, target: char) -> bool {
 #[aoc_generator(day2)]
 pub fn parse_input(input: &str) -> Vec<Input> {
     input.split("\n")
-        .map(|l| parse_one_input(l))
+        .map(|l| parse_one_input(l).unwrap())
         .collect()
 }
 
-fn parse_one_input(input: &str) -> Input {
+fn parse_one_input(input: &str) -> Option<Input> {
     lazy_static! {
         static ref INPUT_REGEX : Regex = Regex::new(
                 r"(\d+)-(\d+) (.): (.+)"
             ).unwrap();
     }
-    let caps = INPUT_REGEX.captures(input).unwrap();
-    Input {
-        password: caps.get(4).unwrap().as_str().to_string(),
+    let caps = INPUT_REGEX.captures(input)?;
+    Some(Input {
+        password: caps[4].to_string(),
         policy: Policy {
-            position1: caps.get(1).and_then(|s| s.as_str().parse().ok()).unwrap(),
-            position2: caps.get(2).and_then(|s| s.as_str().parse().ok()).unwrap(),
-            letter: caps.get(3).and_then(|s| s.as_str().chars().nth(0)).unwrap()
+            position1: caps[1].parse().unwrap(),
+            position2: caps[2].parse().unwrap(),
+            letter: caps[3].chars().nth(0).unwrap(),
         }
-    }
+    })
 }
 
 #[aoc(day2, part1)]
