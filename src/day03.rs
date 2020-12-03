@@ -15,16 +15,14 @@ impl Map {
         Some(xrow[xfolded])
     }
 
-    pub fn get_squares(&self, dx: usize, dy: usize) -> Box<dyn Iterator<Item=Square> + '_> {
+    pub fn get_squares(&self, dx: usize, dy: usize) -> impl Iterator<Item=Square> + '_ {
         let xs = (0..).step_by(dx);
         let ys = (0..).step_by(dy);
 
-        let it = xs.zip(ys)
+        xs.zip(ys)
             .map(move |(x, y)| self.get_square(x, y))
             .take_while(|o| o.is_some())
-            .map(|o| o.unwrap());
-
-        Box::new(it)
+            .map(|o| o.unwrap())
     }
 }
 
