@@ -46,28 +46,61 @@ fn parse_line(line: &str) -> Vec<Square> {
     line.chars().map(parse_square).collect()
 }
 
-fn tree_count(map: &Map, dx: usize, dy: usize) -> usize{
+fn tree_count_iterator(map: &Map, dx: usize, dy: usize) -> usize {
     map.get_squares(dx, dy)
         .filter(|&s| s == Square::TREE)
         .count()
 }
 
-#[aoc(day3, part1)]
-pub fn part1(map: &Map) -> usize {
-    tree_count(map, 3, 1)
+fn tree_count_loop(map: &Map, dx: usize, dy: usize) -> usize {
+    let mut x = 0;
+    let mut y = 0;
+    let mut count = 0;
+
+    loop {
+        let maybe_square = map.get_square(x, y);
+        if maybe_square.is_none() {
+            break;
+        }
+
+        if maybe_square.unwrap() == Square::TREE {
+            count += 1;
+        }
+
+        x += dx;
+        y += dy;
+    }
+    count
 }
 
-#[aoc(day3, part2)]
-pub fn part2(map: &Map) -> usize {
-    let to_try = [
-        (1, 1),
-        (3, 1),
-        (5, 1),
-        (7, 1),
-        (1, 2),
-    ];
+#[aoc(day3, part1, Iterator)]
+pub fn part1_iterator(map: &Map) -> usize {
+    tree_count_iterator(map, 3, 1)
+}
 
-    to_try.iter()
-        .map(|(dx, dy)| tree_count(map, *dx, *dy))
+#[aoc(day3, part1, Loop)]
+pub fn part1_loop(map: &Map) -> usize {
+    tree_count_loop(map, 3, 1)
+}
+
+const SLOPES: [(usize, usize); 5] = [
+    (1, 1),
+    (3, 1),
+    (5, 1),
+    (7, 1),
+    (1, 2),
+];
+
+#[aoc(day3, part2, Iterator)]
+pub fn part2_iterator(map: &Map) -> usize {
+    SLOPES.iter()
+        .map(|(dx, dy)| tree_count_iterator(map, *dx, *dy))
+        .product()
+}
+
+#[aoc(day3, part2, Loop)]
+pub fn part2_loop(map: &Map) -> usize {
+    SLOPES.iter()
+        .map(|(dx, dy)| tree_count_loop(map, *dx, *dy))
         .product()
 }
