@@ -14,6 +14,18 @@ impl Map {
         let xfolded = x % xrow.len();
         Some(xrow[xfolded])
     }
+
+    pub fn get_squares(&self, dx: usize, dy: usize) -> Box<dyn Iterator<Item=Square> + '_> {
+        let xs = (0..).step_by(dx);
+        let ys = (0..).step_by(dy);
+
+        let it = xs.zip(ys)
+            .map(move |(x, y)| self.get_square(x, y))
+            .take_while(|o| o.is_some())
+            .map(|o| o.unwrap());
+
+        Box::new(it)
+    }
 }
 
 #[aoc_generator(day3)]
@@ -35,24 +47,9 @@ fn parse_line(line: &str) -> Vec<Square> {
 }
 
 fn tree_count(map: &Map, dx: usize, dy: usize) -> usize{
-    let mut x = 0;
-    let mut y = 0;
-    let mut count = 0;
-
-    loop {
-        x += dx;
-        y += dy;
-
-        let square = map.get_square(x, y);
-        if square.is_none() {
-            break;
-        }
-
-        if square.unwrap() == Square::TREE {
-            count += 1;
-        }
-    }
-    count
+    map.get_squares(dx, dy)
+        .filter(|&s| s == Square::TREE)
+        .count()
 }
 
 #[aoc(day3, part1)]
