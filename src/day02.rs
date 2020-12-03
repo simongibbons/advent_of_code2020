@@ -45,7 +45,7 @@ fn parse_one_input(input: &str) -> Option<Input> {
                 r"(\d+)-(\d+) (.): (.+)"
             ).unwrap();
     }
-    let caps = INPUT_REGEX.captures(input);
+    let caps = INPUT_REGEX.captures(input)?;
     Some(
         Input {
             password: caps[4].to_string(),
