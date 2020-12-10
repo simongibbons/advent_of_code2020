@@ -1,8 +1,6 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashSet;
-use crate::day08::ExecutionResult::{InfiniteLoop, Success, Error};
-use crate::day08::Instruction::ACC;
 
 #[derive(Copy, Clone)]
 pub enum Instruction {
@@ -49,6 +47,8 @@ impl State {
     }
 
     fn run(&mut self) -> ExecutionResult {
+        use self::ExecutionResult::*;
+
         let mut seen_pcs = HashSet::new();
         loop {
             if seen_pcs.contains(&self.program_counter) {
