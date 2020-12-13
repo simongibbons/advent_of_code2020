@@ -83,7 +83,7 @@ pub fn part2(cards: &[Vec<Instruction>]) -> u64 {
     filled_seat_ids.sorted()
         .tuple_windows()
         .filter(|(s1, s2)| *s2 == s1 + 2)
-        .map(|(s1, s2)| s1 + 1)
+        .map(|(s1, _)| s1 + 1)
         .nth(0)
         .unwrap()
 }
